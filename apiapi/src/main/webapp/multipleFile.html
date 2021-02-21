@@ -1,0 +1,75 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+ 
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
+        <meta content="utf-8" http-equiv="encoding" />
+ 
+       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+        <script type="text/javascript">
+ 
+        $(document).ready(function() 
+        {
+            $("#uploadBtn").click(function() 
+            {
+            	///
+            	let files = document.getElementById("mojfile").files;
+            	console.log(files);
+            	//// / / / / 
+                files.forEach(function(index, value) 
+                { 
+                	//http://localhost:8080/apiapi/webapi/myresource/pdf
+                	//http://localhost:8080/webapi/myresource/pdf
+                    var file = value.files[0];
+                    if(file) 
+                    {
+                        var formData = new FormData();
+                        formData.append('file', file);
+                        $.ajax({
+                          url : '/apiapi/webapi/myresource/pdf',
+                          type : 'POST',
+                          data : formData,
+                          cache : false,
+                          contentType : false,
+                          processData : false,
+                          success : function(data, textStatus, jqXHR) {
+                                var message = jqXHR.responseText;
+                                $("#messages").append("<li>" + message + "</li>");
+                          },
+                          error : function(jqXHR, textStatus, errorThrown) {
+                                $("#messages").append("<li style='color: red;'>" + textStatus + "</li>");
+                          }
+                        });
+                    }
+                });
+            });
+        });
+        </script>
+</head>
+<body>
+    <h1>JAX-RS Multi-file Upload Example</h1>
+ 
+    <form action="webapi/myresource/pdf" method="post" enctype="multipart/form-data">
+ 
+        <p>
+            Select file 1: <input type="file" name="file" size="45" id="mojfile" />
+        </p>
+        <p>
+            Select file 2: <input type="file" name="file" size="45"   />
+        </p>
+        <p>
+            Select file 3: <input type="file" name="file" size="45" />
+        </p>
+        <p>
+            <input id="uploadBtn" type="button" value="Upload PFD Files" />
+        </p>
+ 
+    </form>
+     
+    <ul id="messages">    
+    </ul>
+ 
+</body>
+</html>
